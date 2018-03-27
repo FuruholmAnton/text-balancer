@@ -103,6 +103,9 @@ var textElementIsMultipleLines = function (element) {
     var HEIGHT_OFFSET;
     var elementWords;
     var firstWord;
+    var newElement;
+    var restSentence;
+    var separationIndex;
     var ORIGINAL_ELEMENT_TEXT;
 
     ORIGINAL_ELEMENT_TEXT = element.innerHTML;
@@ -113,35 +116,25 @@ var textElementIsMultipleLines = function (element) {
     // we should be good
     HEIGHT_OFFSET = 10;
 
-    // get all the words in the headline as
-    // an array -- will include punctuation
-    //
-    // this is used to put the headline back together
-    elementWords = element.innerHTML.split(' ');
+    // Gets the index where the first word ends
+    // Use the index to split the first word from the rest
+    separationIndex = ORIGINAL_ELEMENT_TEXT.indexOf(' ');
+    firstWord = ORIGINAL_ELEMENT_TEXT.slice(0, separationIndex);
+    restSentence = ORIGINAL_ELEMENT_TEXT.slice(separationIndex, ORIGINAL_ELEMENT_TEXT.length);
 
     // make span for first word and give it an id
     // so we can access it in le dom
-    firstWord = document.createElement('span');
-    firstWord.id = 'element-first-word';
-    firstWord.innerHTML = elementWords[0];
-
-    // this is the entire headline
-    // as an array except for first word
-    //
-    // we will append it to the headline after the span
-    elementWords = elementWords.slice(1);
+    newElement = document.createElement('span');
+    newElement.innerHTML = firstWord;
 
     // empty the headline and append the span to it
     element.innerHTML = '';
-    element.appendChild(firstWord);
+    element.appendChild(newElement);
 
     // add the rest of the element back to it
-    element.innerHTML += ' ' + elementWords.join(' ');
+    element.innerHTML += restSentence;
 
-    // update the first word variable in the dom
-    firstWord = document.getElementById('element-first-word');
-
-    firstWordHeight = firstWord.offsetHeight;
+    firstWordHeight = newElement.offsetHeight;
     elementHeight = element.offsetHeight;
     // restore the original element text
     element.innerHTML = ORIGINAL_ELEMENT_TEXT;
